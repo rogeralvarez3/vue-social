@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RedSocial - Inicio</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">RedSocial</span>
+    <div class="topbar-right">
+      <button id="btn-notifs">🔔 <span id="notif-count" class="badge hidden">0</span></button>
+      <span id="me-name"></span>
+      <button id="btn-logout">Salir</button>
+    </div>
+  </header>
+
+  <main class="feed-container">
+    <section class="new-post">
+      <form id="form-post">
+        <textarea id="post-content" placeholder="¿Que estas pensando?"></textarea>
+        <div class="new-post-actions">
+          <input type="file" id="post-image" accept="image/*">
+          <button type="submit">Publicar</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="notif-panel" class="notif-panel hidden"></section>
+
+    <section id="posts-list" class="posts-list">
+      <p id="loading-msg">Cargando publicaciones...</p>
+    </section>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/socket-client.js"></script>
+  <script src="/js/feed.js"></script>
+</body>
+</html>

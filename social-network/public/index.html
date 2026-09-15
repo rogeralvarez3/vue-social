@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RedSocial - Ingresar</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <h1>RedSocial</h1>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="login">Iniciar sesion</button>
+      <button class="tab-btn" data-tab="register">Crear cuenta</button>
+    </div>
+
+    <form id="form-login" class="auth-form">
+      <input type="text" id="login-identifier" placeholder="Usuario o correo" required>
+      <input type="password" id="login-password" placeholder="Contraseña" required>
+      <button type="submit">Entrar</button>
+      <p class="error" id="login-error"></p>
+    </form>
+
+    <form id="form-register" class="auth-form hidden">
+      <input type="text" id="reg-fullname" placeholder="Nombre completo" required>
+      <input type="text" id="reg-username" placeholder="Nombre de usuario" required>
+      <input type="email" id="reg-email" placeholder="Correo electronico" required>
+      <input type="password" id="reg-password" placeholder="Contraseña (min. 8 caracteres)" required>
+      <button type="submit">Registrarme</button>
+      <p class="error" id="register-error"></p>
+    </form>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

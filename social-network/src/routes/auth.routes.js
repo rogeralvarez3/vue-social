@@ -61,6 +61,7 @@ function publicUser(row) {
     username: row.username,
     email: row.email,
     fullName: row.full_name,
+    accountType: row.account_type,
     bio: row.bio,
     country: row.country,
     city: row.city,
@@ -75,10 +76,13 @@ function publicUser(row) {
 // ---------------------------------------------------------
 router.post('/register', async (req, res, next) => {
   try {
-    const { username, email, password, fullName, country, city } = req.body;
+    const { username, email, password, fullName, country, city, accountType } = req.body;
 
-    if (!username || !email || !password || !fullName || !country || !city) {
-      return res.status(400).json({ ok: false, error: 'Faltan campos obligatorios (incluye país y ciudad)' });
+    if (!username || !email || !password || !fullName || !country || !city || !accountType) {
+      return res.status(400).json({ ok: false, error: 'Faltan campos obligatorios (incluye país, ciudad y tipo de cuenta)' });
+    }
+    if (!['personal', 'negocio'].includes(accountType)) {
+      return res.status(400).json({ ok: false, error: 'El tipo de cuenta debe ser "personal" o "negocio"' });
     }
     if (password.length < 8) {
       return res.status(400).json({ ok: false, error: 'La contraseña debe tener al menos 8 caracteres' });
@@ -98,10 +102,10 @@ router.post('/register', async (req, res, next) => {
     const passwordHash = await bcrypt.hash(password, 12);
 
     const result = await pool.query(
-      `INSERT INTO users (username, email, password_hash, full_name, country, city)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO users (username, email, password_hash, full_name, country, city, account_type)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [username, email, passwordHash, fullName, country.trim(), city.trim()]
+      [username, email, passwordHash, fullName, country.trim(), city.trim(), accountType]
     );
 
     const user = result.rows[0];

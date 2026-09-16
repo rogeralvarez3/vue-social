@@ -32,7 +32,8 @@ function mapPost(row) {
           fullName: row.full_name,
           avatarUrl: row.avatar_url,
           city: row.author_city,
-          country: row.author_country
+          country: row.author_country,
+          accountType: row.author_account_type
         }
       : undefined,
     content: row.content,
@@ -180,6 +181,7 @@ async function listar(req, res) {
 
   const result = await pool.query(
     `SELECT p.*, u.username, u.full_name, u.avatar_url, u.city AS author_city, u.country AS author_country,
+            u.account_type AS author_account_type,
             (SELECT COUNT(*) FROM likes l WHERE l.post_id = p.id) AS likes_count,
             (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id AND c.deleted_at IS NULL) AS comments_count,
             EXISTS(SELECT 1 FROM likes l2 WHERE l2.post_id = p.id AND l2.user_id = $1) AS liked_by_me

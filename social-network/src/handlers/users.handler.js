@@ -13,6 +13,7 @@ function publicUser(row) {
     id: row.id,
     username: row.username,
     fullName: row.full_name,
+    accountType: row.account_type,
     bio: row.bio,
     country: row.country,
     city: row.city,
@@ -32,7 +33,10 @@ function requireAuth(req, res) {
 
 async function actualizar(req, res) {
   if (!requireAuth(req, res)) return;
-  const { fullName, bio, country, city } = req.body;
+  const { fullName, bio, country, city, accountType } = req.body;
+  if (accountType && !['personal', 'negocio'].includes(accountType)) {
+    return res.status(400).json({ ok: false, error: 'El tipo de cuenta debe ser "personal" o "negocio"' });
+  }
 
   const avatarUrl = req.files?.avatar?.[0] ? `/uploads/avatars/${req.files.avatar[0].filename}` : undefined;
   const coverUrl = req.files?.cover?.[0] ? `/uploads/avatars/${req.files.cover[0].filename}` : undefined;
@@ -43,11 +47,12 @@ async function actualizar(req, res) {
         bio = COALESCE($2, bio),
         country = COALESCE($3, country),
         city = COALESCE($4, city),
-        avatar_url = COALESCE($5, avatar_url),
-        cover_url = COALESCE($6, cover_url)
-     WHERE id = $7
+        account_type = COALESCE($5, account_type),
+        avatar_url = COALESCE($6, avatar_url),
+        cover_url = COALESCE($7, cover_url)
+     WHERE id = $8
      RETURNING *`,
-    [fullName, bio, country, city, avatarUrl, coverUrl, req.userId]
+    [fullName, bio, country, city, accountType, avatarUrl, coverUrl, req.userId]
   );
 
   res.json({ ok: true, user: publicUser(result.rows[0]) });

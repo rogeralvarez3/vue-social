@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
   email         VARCHAR(150) UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   full_name     VARCHAR(120) NOT NULL,
+  account_type  VARCHAR(20) NOT NULL DEFAULT 'personal', -- personal | negocio
   bio           VARCHAR(280) DEFAULT '',
   country       VARCHAR(100) DEFAULT NULL,
   city          VARCHAR(100) DEFAULT NULL,
@@ -37,10 +38,11 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Migracion segura para bases ya existentes (usuarios registrados antes de
--- pedir pais/ciudad quedan con estos campos en NULL; el feed los trata como
--- "todas las ciudades" hasta que completen su perfil).
+-- pedir pais/ciudad/tipo de cuenta quedan con estos campos en NULL/default;
+-- el feed trata la ciudad NULL como "todas las ciudades" hasta que completen su perfil).
 ALTER TABLE users ADD COLUMN IF NOT EXISTS country VARCHAR(100);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS city VARCHAR(100);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS account_type VARCHAR(20) NOT NULL DEFAULT 'personal';
 
 DROP TRIGGER IF EXISTS trg_users_updated_at ON users;
 CREATE TRIGGER trg_users_updated_at
